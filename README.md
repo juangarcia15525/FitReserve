@@ -1,24 +1,133 @@
 ﻿# FitReserve API
 
-FitReserve API es una API REST desarrollada con Java y Spring Boot para gestionar reservas de clases colectivas en un gimnasio.
+FitReserve API es una API REST creada con Java y Spring Boot para gestionar reservas de clases colectivas en un gimnasio. El proyecto incluye autenticacion Bearer con JWT, roles de usuario, CRUD de salas, CRUD de clases, reservas, validaciones, manejo global de errores y una pantalla web sencilla para probar la aplicacion desde el navegador.
+
+Repositorio GitHub: https://github.com/juangarcia15525/FitReserve
+
+## Descripcion del proyecto
+
+La aplicacion permite gestionar un gimnasio con tres tipos principales de usuarios:
+
+- ADMIN: puede crear, editar y borrar salas y clases.
+- TRAINER: representa a los entrenadores que imparten clases.
+- MEMBER: puede consultar clases y realizar reservas.
+
+El sistema trabaja con salas, clases de gimnasio y reservas. Las clases usan herencia JPA con una clase padre abstracta `ClaseGimnasio` y tres clases hijas: `ClaseCardio`, `ClaseFuerza` y `ClaseMenteCuerpo`.
+
+Tambien incluye una pantalla visual en:
+
+```text
+http://localhost:8080/
+```
+
+Desde esa pantalla se puede registrar usuarios, iniciar sesion, ver salas, ver clases, crear salas como ADMIN y hacer reservas.
 
 ## Funcionalidades
 
-- Pantalla visual en http://localhost:8080/ para registrar usuarios, iniciar sesion, crear salas, ver clases y reservar.
-
-- Registro e inicio de sesiÃƒÂ³n de usuarios.
-- AutenticaciÃƒÂ³n Bearer con JWT.
-- Roles: ADMIN, TRAINER y MEMBER.
+- Registro de usuarios.
+- Inicio de sesion con JWT.
+- Autenticacion Bearer Token.
+- Autorizacion por roles: ADMIN, TRAINER y MEMBER.
 - CRUD completo de salas.
 - CRUD de clases de gimnasio.
-- Herencia JPA con `ClaseGimnasio` como clase abstracta.
-- Tipos de clase: `ClaseCardio`, `ClaseFuerza` y `ClaseMenteCuerpo`.
-- Reservar plaza en una clase.
-- Cancelar reservas.
-- Validaciones de entrada.
-- Manejo global de errores.
+- Herencia JPA con estrategia `JOINED`.
+- Reservas de clases.
+- Cancelacion de reservas.
+- Validaciones de entrada con Bean Validation.
+- Manejo global de errores con respuestas JSON.
+- Datos iniciales de prueba mediante `DataInitializer`.
+- Pantalla web local para probar el backend sin Postman.
 
-## TecnologÃƒÂ­as
+## Diagramas
+
+El repositorio incluye diagramas actualizados en la carpeta `docs`:
+
+- `docs/diagrama-uml-nuevo.md`: diagrama UML actual para entregar.
+- `docs/diagrama-actualizado.md`: diagrama completo de dominio y arquitectura.
+- `docs/diagrama-casos-uso.md`: diagrama de casos de uso.
+
+La herencia JPA principal es:
+
+```java
+@Inheritance(strategy = InheritanceType.JOINED)
+```
+
+Resumen del modelo:
+
+- `Usuario` realiza muchas `Reserva`.
+- `Usuario` tambien puede actuar como entrenador de muchas `ClaseGimnasio`.
+- `Sala` contiene muchas `ClaseGimnasio`.
+- `ClaseGimnasio` puede tener muchas `Reserva`.
+- `ClaseCardio`, `ClaseFuerza` y `ClaseMenteCuerpo` heredan de `ClaseGimnasio`.
+
+## Configuracion
+
+### Requisitos
+
+- Java 17.
+- Maven.
+- MySQL.
+- IntelliJ IDEA o cualquier IDE compatible con Spring Boot.
+
+### Base de datos
+
+Crea la base de datos en MySQL:
+
+```sql
+CREATE DATABASE fitreserve_db;
+```
+
+### Contrasena de MySQL
+
+Antes de ejecutar el proyecto, abre:
+
+```text
+src/main/resources/application.properties
+```
+
+Busca esta linea:
+
+```properties
+spring.datasource.password=TU_PASSWORD
+```
+
+Sustituye `TU_PASSWORD` por la contrasena de tu usuario MySQL.
+
+Ejemplo:
+
+```properties
+spring.datasource.password=mi_password_mysql
+```
+
+Cada persona que descargue el proyecto debe poner su propia contrasena de MySQL. No necesita la contrasena del autor.
+
+## Ejecucion
+
+### Desde IntelliJ IDEA
+
+1. Abre IntelliJ IDEA.
+2. Ve a `File > Open`.
+3. Selecciona la carpeta `fitreserve-api`.
+4. Espera a que Maven cargue las dependencias.
+5. Cambia `TU_PASSWORD` en `application.properties` por tu contrasena de MySQL.
+6. Ejecuta `FitReserveApiApplication.java` con el boton verde.
+7. Abre `http://localhost:8080/`.
+
+### Desde terminal
+
+```bash
+mvn spring-boot:run
+```
+
+Mientras la aplicacion este arrancada, funciona en:
+
+```text
+http://localhost:8080/
+```
+
+Si se cierra IntelliJ o la terminal donde se esta ejecutando Spring Boot, la aplicacion se apaga.
+
+## Tecnologias utilizadas
 
 - Java 17
 - Spring Boot 3.5.14
@@ -29,236 +138,146 @@ FitReserve API es una API REST desarrollada con Java y Spring Boot para gestiona
 - MySQL
 - Maven
 - Lombok
-- Validation
+- Bean Validation
+- HTML, CSS y JavaScript basico para la pantalla visual
 
-## Diagrama UML
+## Estructura del proyecto
 
-El diagrama actualizado del proyecto esta en:
-
-- `docs/diagrama-actualizado.md`
-- docs/diagrama-uml-nuevo.md (diagrama UML actual para entregar)
-
-Incluye:
-
-- Diagrama UML de dominio con `Usuario`, `Reserva`, `Sala`, `ClaseGimnasio` y sus subclases.
-- Enumeraciones `Rol`, `EstadoReserva` y `NivelIntensidad`.
-- Diagrama de arquitectura con pantalla web, controllers, services, repositories, seguridad JWT y MySQL.
-- Flujo visual de registro, login, consulta de salas/clases y reservas.
-
-La herencia JPA se implementa con:
-
-```java
-@Inheritance(strategy = InheritanceType.JOINED)
-```
-## ConfiguraciÃƒÂ³n de MySQL
-
-Crea la base de datos:
-
-```sql
-CREATE DATABASE fitreserve_db;
+```text
+src/main/java/com/fitreserve/api
+|-- config
+|-- controller
+|-- dto
+|-- exception
+|-- model
+|-- repository
+|-- security
+|-- service
 ```
 
-Edita `src/main/resources/application.properties` y cambia la contraseÃƒÂ±a:
+## Controladores y rutas
 
-```properties
-spring.datasource.username=root
-spring.datasource.password=TU_PASSWORD
-```
-
-## Ejecutar en IntelliJ IDEA
-
-1. Abre IntelliJ IDEA.
-2. Ve a `File > Open`.
-3. Selecciona la carpeta `fitreserve-api`.
-4. Espera a que Maven cargue las dependencias.
-5. Cambia la contraseÃƒÂ±a de MySQL en `application.properties`.
-6. Ejecuta `FitReserveApiApplication.java` con el botÃƒÂ³n verde.
-
-TambiÃƒÂ©n puedes ejecutar desde terminal:
-
-```bash
-mvn spring-boot:run
-```
-
-## Rutas principales
-
-### Auth
+### AuthController
 
 ```http
 POST /auth/register
 POST /auth/login
+GET  /auth/register
+GET  /auth/login
 ```
 
-### Salas
+Los GET redirigen a la pantalla visual para evitar errores al abrir esas rutas desde el navegador.
 
-Requieren rol ADMIN.
+### SalaController
 
 ```http
-GET /api/salas
-GET /api/salas/{id}
-POST /api/salas
-PUT /api/salas/{id}
+GET    /api/salas
+GET    /api/salas/{id}
+POST   /api/salas
+PUT    /api/salas/{id}
 DELETE /api/salas/{id}
 ```
 
-### Clases
+Las operaciones de modificacion requieren rol ADMIN.
 
-Consultar clases es pÃƒÂºblico. Crear, editar y borrar requiere ADMIN.
+### ClaseGimnasioController
 
 ```http
-GET /api/clases
-GET /api/clases/disponibles
-GET /api/clases/{id}
-POST /api/clases/cardio
-POST /api/clases/fuerza
-POST /api/clases/mente-cuerpo
-PUT /api/clases/{id}
+GET    /api/clases
+GET    /api/clases/disponibles
+GET    /api/clases/{id}
+POST   /api/clases/cardio
+POST   /api/clases/fuerza
+POST   /api/clases/mente-cuerpo
+PUT    /api/clases/{id}
 DELETE /api/clases/{id}
 ```
 
-### Reservas
+Consultar clases es publico. Crear, editar y borrar clases requiere rol ADMIN.
 
-Requieren usuario autenticado con rol MEMBER o ADMIN.
+### ReservaController
 
 ```http
-GET /api/reservas
-GET /api/reservas/mis-reservas
-POST /api/reservas/clases/{claseId}
-PATCH /api/reservas/{reservaId}/cancelar
+GET    /api/reservas
+GET    /api/reservas/mis-reservas
+POST   /api/reservas/clases/{claseId}
+PATCH  /api/reservas/{reservaId}/cancelar
 DELETE /api/reservas/{id}
 ```
 
-## Ejemplos para Postman
+Las reservas requieren usuario autenticado con rol MEMBER o ADMIN.
 
-### Registrar admin
+## Pruebas con Postman
 
-```http
-POST http://localhost:8080/auth/register
-Content-Type: application/json
-```
-
-```json
-{
-  "nombre": "Admin",
-  "email": "admin@test.com",
-  "password": "123456",
-  "rol": "ADMIN"
-}
-```
-
-### Registrar entrenador
-
-```json
-{
-  "nombre": "Entrenador",
-  "email": "trainer@test.com",
-  "password": "123456",
-  "rol": "TRAINER"
-}
-```
-
-### Registrar socio
-
-```json
-{
-  "nombre": "Juan",
-  "email": "juan@test.com",
-  "password": "123456",
-  "rol": "MEMBER"
-}
-```
-
-### Login
-
-```http
-POST http://localhost:8080/auth/login
-Content-Type: application/json
-```
-
-```json
-{
-  "email": "admin@test.com",
-  "password": "123456"
-}
-```
-
-Copia el token y ÃƒÂºsalo en Postman:
+El repositorio incluye ejemplos en:
 
 ```text
-Authorization > Bearer Token
+docs/postman-examples.http
 ```
 
-### Crear sala como ADMIN
+Tambien se puede probar desde la pantalla visual en:
 
-```http
-POST http://localhost:8080/api/salas
-Authorization: Bearer TU_TOKEN_ADMIN
-Content-Type: application/json
+```text
+http://localhost:8080/
 ```
 
-```json
-{
-  "nombre": "Sala Spinning",
-  "capacidadMaxima": 25,
-  "ubicacion": "Primera planta"
-}
+Usuarios iniciales creados por `DataInitializer`:
+
+```text
+admin@test.com   / 123456 / ADMIN
+trainer@test.com / 123456 / TRAINER
+juan@test.com    / 123456 / MEMBER
 ```
 
-### Crear clase de cardio como ADMIN
-
-```http
-POST http://localhost:8080/api/clases/cardio
-Authorization: Bearer TU_TOKEN_ADMIN
-Content-Type: application/json
-```
-
-```json
-{
-  "nombre": "Spinning",
-  "descripcion": "Clase intensa de bicicleta",
-  "fechaInicio": "2026-08-20T10:00:00",
-  "fechaFin": "2026-08-20T11:00:00",
-  "capacidad": 20,
-  "nivelIntensidad": "ALTO",
-  "salaId": 1,
-  "entrenadorId": 2,
-  "caloriasEstimadas": 500,
-  "tipoCardio": "Bicicleta"
-}
-```
-
-### Reservar clase como MEMBER
-
-```http
-POST http://localhost:8080/api/reservas/clases/1
-Authorization: Bearer TU_TOKEN_MEMBER
-```
-
-### Cancelar reserva
-
-```http
-PATCH http://localhost:8080/api/reservas/1/cancelar
-Authorization: Bearer TU_TOKEN_MEMBER
-```
-
-## Reglas de negocio implementadas
+## Reglas de negocio
 
 - No se puede reservar una clase que ya ha empezado.
 - No se puede reservar dos veces la misma clase con una reserva activa.
 - No se puede reservar una clase llena.
-- No se puede cancelar una reserva si la clase ya empezÃƒÂ³.
-- No se puede crear una clase con mÃƒÂ¡s capacidad que la sala.
+- No se puede cancelar una reserva si la clase ya empezo.
+- No se puede crear una clase con mas capacidad que la sala.
 - Solo ADMIN puede crear, editar y borrar salas y clases.
+
+## Gestion de tareas
+
+La planificacion del proyecto esta documentada en:
+
+```text
+docs/tareas-proyecto.md
+```
+
+En una entrega real tambien se puede copiar esta planificacion a Trello, GitHub Projects o Notion y anadir aqui la URL publica.
+
+## Enlaces adicionales
+
+- Repositorio GitHub: https://github.com/juangarcia15525/FitReserve
+- Aplicacion local: http://localhost:8080/
+- Diagrama UML: `docs/diagrama-uml-nuevo.md`
+- Casos de uso: `docs/diagrama-casos-uso.md`
+- Ejemplos HTTP/Postman: `docs/postman-examples.http`
 
 ## Trabajo futuro
 
-- AÃƒÂ±adir Swagger/OpenAPI.
-- AÃƒÂ±adir tests unitarios.
-- AÃƒÂ±adir filtros por fecha, intensidad y sala.
-- AÃƒÂ±adir paginaciÃƒÂ³n.
-- AÃƒÂ±adir gestiÃƒÂ³n avanzada de entrenadores.
+- Anadir Swagger/OpenAPI.
+- Anadir tests unitarios y de integracion.
+- Anadir filtros por fecha, intensidad y sala.
+- Anadir paginacion.
+- Anadir gestion avanzada de entrenadores.
+- Desplegar la aplicacion en un servidor cloud.
+
+## Recursos
+
+- Documentacion oficial de Spring Boot.
+- Documentacion oficial de Spring Security.
+- Documentacion oficial de Spring Data JPA.
+- Documentacion oficial de MySQL.
+- Documentacion de JWT.
+
+## Licencia
+
+Proyecto academico creado para entrega final. Uso educativo.
 
 ## Miembros del equipo
 
-- Juan
+- Juan Garcia
 
