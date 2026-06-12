@@ -1,46 +1,46 @@
-﻿# Presentacion FitReserve API
+﻿# Presentacion final - FitReserve API
 
 Duracion objetivo: 5 minutos
 
 - 3 minutos de explicacion
 - 2 minutos de demostracion
-- Total: 9 diapositivas
+- Total: 10 diapositivas
 
 ## Diapositiva 1 - Titulo
 
 **FitReserve API**
 
-Backend de reservas de clases de gimnasio
+Backend de reservas de clases de gimnasio con Spring Boot, MySQL, JPA y JWT.
 
 Juan Garcia
 
 **Notas para hablar:**
-Hola, soy Juan Garcia y voy a presentar FitReserve API, un backend creado con Java, Spring Boot y MySQL para gestionar reservas de clases en un gimnasio.
+Hola, soy Juan Garcia y voy a presentar FitReserve API, una aplicacion backend creada con Java y Spring Boot para gestionar reservas de clases en un gimnasio.
 
 ## Diapositiva 2 - Sobre mi
 
 **Sobre mi**
 
 - Me interesa el desarrollo backend.
-- Queria practicar una API REST real con seguridad.
-- Elegi un gimnasio porque tiene usuarios, clases, salas y reservas.
+- Queria practicar una API REST real.
+- Elegi un gimnasio porque permite trabajar con usuarios, clases, salas, reservas y seguridad.
 
 **Notas para hablar:**
-Para este proyecto queria practicar una aplicacion parecida a un caso real. Un gimnasio me parecia una buena idea porque permite trabajar con relaciones entre tablas, roles de usuario y reglas de negocio.
+Para este proyecto queria practicar una aplicacion parecida a un caso real. Un gimnasio me parecia una buena idea porque junta varias partes importantes: base de datos, relaciones, roles, autenticacion y reglas de negocio.
 
-## Diapositiva 3 - El problema
+## Diapositiva 3 - Problema
 
 **Reservar clases necesita orden y control**
 
-- Los socios necesitan ver clases disponibles.
+- Los socios necesitan consultar clases disponibles.
 - El gimnasio necesita controlar salas y capacidad.
 - Los administradores necesitan gestionar clases y reservas.
-- El sistema debe evitar reservas duplicadas o clases llenas.
+- El sistema debe evitar reservas duplicadas y clases llenas.
 
 **Notas para hablar:**
-El problema principal es organizar las reservas. Si todo se hace manualmente, es facil duplicar reservas, superar la capacidad o perder informacion. FitReserve centraliza ese proceso.
+El problema es que una reserva manual puede causar duplicados, sobrepasar la capacidad de una sala o perder informacion. FitReserve centraliza este proceso.
 
-## Diapositiva 4 - Que es FitReserve
+## Diapositiva 4 - Solucion
 
 **FitReserve conecta usuarios, salas, clases y reservas**
 
@@ -52,20 +52,33 @@ El problema principal es organizar las reservas. Si todo se hace manualmente, es
 - Pantalla web local para probar la API.
 
 **Notas para hablar:**
-FitReserve permite registrar usuarios, iniciar sesion, consultar clases, reservar plaza y administrar salas y clases. Tiene una pantalla visual para probarlo sin depender solo de Postman.
+FitReserve permite registrar usuarios, iniciar sesion, consultar clases, reservar plaza y administrar salas y clases. Tambien tiene una pantalla visual en localhost para hacer pruebas facilmente.
 
-## Diapositiva 5 - Modelo de datos
+## Diapositiva 5 - Diagrama UML actualizado
 
-**El modelo usa relaciones JPA y herencia JOINED**
+**Modelo principal del proyecto actual**
 
 - Usuario realiza reservas.
 - Sala contiene clases.
-- ClaseGimnasio es la clase padre abstracta.
+- ClaseGimnasio es abstracta.
 - ClaseCardio, ClaseFuerza y ClaseMenteCuerpo heredan de ClaseGimnasio.
 - Reserva une Usuario con ClaseGimnasio.
 
+**Diagrama para mostrar:**
+
+```mermaid
+classDiagram
+    Usuario "1" --> "0..*" Reserva : realiza
+    Usuario "1" --> "0..*" ClaseGimnasio : entrenador
+    Sala "1" --> "0..*" ClaseGimnasio : contiene
+    ClaseGimnasio "1" --> "0..*" Reserva : recibe
+    ClaseGimnasio <|-- ClaseCardio
+    ClaseGimnasio <|-- ClaseFuerza
+    ClaseGimnasio <|-- ClaseMenteCuerpo
+```
+
 **Notas para hablar:**
-La parte mas importante del modelo es la herencia. ClaseGimnasio es abstracta y las clases concretas heredan de ella. Use JOINED porque cada tipo de clase tiene campos propios y asi la base de datos queda mas normalizada.
+Este es el modelo actualizado del proyecto. La parte clave es la herencia: ClaseGimnasio es la clase padre y las clases concretas heredan de ella. Use la estrategia JOINED porque cada tipo de clase tiene campos propios.
 
 ## Diapositiva 6 - Arquitectura tecnica
 
@@ -78,40 +91,53 @@ La parte mas importante del modelo es la herencia. ClaseGimnasio es abstracta y 
 - Security: gestiona JWT y roles.
 
 **Notas para hablar:**
-La aplicacion esta separada por capas para mantener el codigo limpio. Los controladores no hacen toda la logica, sino que delegan en servicios. Los repositorios se encargan de hablar con la base de datos.
+La aplicacion esta separada por capas. Esto hace que el codigo sea mas limpio: los controladores reciben peticiones, los servicios hacen la logica y los repositorios acceden a la base de datos.
 
-## Diapositiva 7 - Reto tecnico
+## Diapositiva 7 - Seguridad y roles
 
-**El reto principal fue combinar JWT, roles y relaciones JPA**
+**JWT protege las rutas segun el tipo de usuario**
 
-- Proteger rutas segun el rol del usuario.
-- Evitar errores de serializacion con relaciones lazy.
-- Devolver DTOs en lugar de entidades completas.
-- Mantener reglas de negocio en los servicios.
+- Las rutas publicas permiten registro, login y consulta.
+- ADMIN puede crear, editar y borrar salas y clases.
+- MEMBER puede reservar y cancelar sus reservas.
+- El token Bearer identifica al usuario en cada peticion.
 
 **Notas para hablar:**
-El mayor reto fue hacer que seguridad y JPA funcionaran bien juntas. Al principio algunas relaciones lazy podian causar errores al devolver JSON. Lo solucione usando DTOs de respuesta y controlando mejor que informacion se envia al cliente.
+La autenticacion se implementa con JWT. Cuando el usuario inicia sesion recibe un token, y ese token se usa para acceder a las rutas protegidas. Ademas, las rutas estan filtradas por rol.
 
-## Diapositiva 8 - Error y aprendizaje
+## Diapositiva 8 - Reto tecnico
 
-**Aprendi a separar configuracion, seguridad y salida de datos**
+**El mayor reto fue combinar JPA, DTOs y seguridad**
+
+- Evitar errores al devolver entidades con relaciones lazy.
+- Proteger correctamente rutas por rol.
+- Devolver respuestas limpias con DTOs.
+- Mantener las reglas de negocio en los servicios.
+
+**Notas para hablar:**
+El reto tecnico mas importante fue hacer que JPA y Spring Security funcionaran bien juntos. Para evitar errores de serializacion, use DTOs de respuesta en vez de devolver entidades completas.
+
+## Diapositiva 9 - Error y aprendizaje
+
+**Aprendi a documentar y preparar un proyecto para entrega**
 
 - No subir contrasenas reales a GitHub.
-- Documentar `TU_PASSWORD` para cada entorno.
-- Usar DTOs para respuestas limpias.
+- Dejar `TU_PASSWORD` para que cada persona ponga su contrasena.
 - Probar rutas desde navegador y ejemplos HTTP.
+- Documentar diagramas, rutas y configuracion.
 
 **Notas para hablar:**
-Uno de los aprendizajes fue no dejar datos sensibles en el repositorio. Tambien aprendi que devolver directamente entidades JPA no siempre es buena idea, especialmente cuando hay relaciones entre tablas.
+Un aprendizaje importante fue preparar bien la configuracion para GitHub. En vez de subir una contrasena real, el README explica que cada persona debe cambiar TU_PASSWORD por su contrasena local de MySQL.
 
-## Diapositiva 9 - Demo y cierre
+## Diapositiva 10 - Demo y cierre
 
 **DEMO**
 
 - Aplicacion local: http://localhost:8080/
 - GitHub: https://github.com/juangarcia15525/FitReserve
+- Diagrama UML: docs/diagrama-uml-nuevo.md
 
 **Gracias**
 
 **Notas para hablar:**
-Ahora haria la demo: abriria la pantalla principal, mostraria salas y clases, iniciaria sesion como admin o member y haria una reserva. Gracias por escuchar.
+En la demo abriria localhost, mostraria las salas y clases, iniciaria sesion como admin o member y haria una reserva. Gracias por escuchar.
