@@ -1,4 +1,4 @@
-# FitReserve API
+﻿# FitReserve API
 
 FitReserve API es una API REST desarrollada con Java y Spring Boot para gestionar reservas de clases colectivas en un gimnasio.
 
@@ -6,8 +6,8 @@ FitReserve API es una API REST desarrollada con Java y Spring Boot para gestiona
 
 - Pantalla visual en http://localhost:8080/ para registrar usuarios, iniciar sesion, crear salas, ver clases y reservar.
 
-- Registro e inicio de sesiÃ³n de usuarios.
-- AutenticaciÃ³n Bearer con JWT.
+- Registro e inicio de sesiÃƒÂ³n de usuarios.
+- AutenticaciÃƒÂ³n Bearer con JWT.
 - Roles: ADMIN, TRAINER y MEMBER.
 - CRUD completo de salas.
 - CRUD de clases de gimnasio.
@@ -18,7 +18,7 @@ FitReserve API es una API REST desarrollada con Java y Spring Boot para gestiona
 - Validaciones de entrada.
 - Manejo global de errores.
 
-## TecnologÃ­as
+## TecnologÃƒÂ­as
 
 - Java 17
 - Spring Boot 3.5.14
@@ -36,6 +36,7 @@ FitReserve API es una API REST desarrollada con Java y Spring Boot para gestiona
 El diagrama actualizado del proyecto esta en:
 
 - `docs/diagrama-actualizado.md`
+- docs/diagrama-uml-nuevo.md (diagrama UML actual para entregar)
 
 Incluye:
 
@@ -49,7 +50,7 @@ La herencia JPA se implementa con:
 ```java
 @Inheritance(strategy = InheritanceType.JOINED)
 ```
-## ConfiguraciÃ³n de MySQL
+## ConfiguraciÃƒÂ³n de MySQL
 
 Crea la base de datos:
 
@@ -57,7 +58,7 @@ Crea la base de datos:
 CREATE DATABASE fitreserve_db;
 ```
 
-Edita `src/main/resources/application.properties` y cambia la contraseÃ±a:
+Edita `src/main/resources/application.properties` y cambia la contraseÃƒÂ±a:
 
 ```properties
 spring.datasource.username=root
@@ -70,10 +71,10 @@ spring.datasource.password=TU_PASSWORD
 2. Ve a `File > Open`.
 3. Selecciona la carpeta `fitreserve-api`.
 4. Espera a que Maven cargue las dependencias.
-5. Cambia la contraseÃ±a de MySQL en `application.properties`.
-6. Ejecuta `FitReserveApiApplication.java` con el botÃ³n verde.
+5. Cambia la contraseÃƒÂ±a de MySQL en `application.properties`.
+6. Ejecuta `FitReserveApiApplication.java` con el botÃƒÂ³n verde.
 
-TambiÃ©n puedes ejecutar desde terminal:
+TambiÃƒÂ©n puedes ejecutar desde terminal:
 
 ```bash
 mvn spring-boot:run
@@ -102,7 +103,7 @@ DELETE /api/salas/{id}
 
 ### Clases
 
-Consultar clases es pÃºblico. Crear, editar y borrar requiere ADMIN.
+Consultar clases es pÃƒÂºblico. Crear, editar y borrar requiere ADMIN.
 
 ```http
 GET /api/clases
@@ -181,7 +182,7 @@ Content-Type: application/json
 }
 ```
 
-Copia el token y Ãºsalo en Postman:
+Copia el token y ÃƒÂºsalo en Postman:
 
 ```text
 Authorization > Bearer Token
@@ -245,18 +246,19 @@ Authorization: Bearer TU_TOKEN_MEMBER
 - No se puede reservar una clase que ya ha empezado.
 - No se puede reservar dos veces la misma clase con una reserva activa.
 - No se puede reservar una clase llena.
-- No se puede cancelar una reserva si la clase ya empezÃ³.
-- No se puede crear una clase con mÃ¡s capacidad que la sala.
+- No se puede cancelar una reserva si la clase ya empezÃƒÂ³.
+- No se puede crear una clase con mÃƒÂ¡s capacidad que la sala.
 - Solo ADMIN puede crear, editar y borrar salas y clases.
 
 ## Trabajo futuro
 
-- AÃ±adir Swagger/OpenAPI.
-- AÃ±adir tests unitarios.
-- AÃ±adir filtros por fecha, intensidad y sala.
-- AÃ±adir paginaciÃ³n.
-- AÃ±adir gestiÃ³n avanzada de entrenadores.
+- AÃƒÂ±adir Swagger/OpenAPI.
+- AÃƒÂ±adir tests unitarios.
+- AÃƒÂ±adir filtros por fecha, intensidad y sala.
+- AÃƒÂ±adir paginaciÃƒÂ³n.
+- AÃƒÂ±adir gestiÃƒÂ³n avanzada de entrenadores.
 
 ## Miembros del equipo
 
 - Juan
+
