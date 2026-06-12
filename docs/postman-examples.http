@@ -1,0 +1,85 @@
+### Registrar admin
+POST http://localhost:8080/auth/register
+Content-Type: application/json
+
+{
+  "nombre": "Admin",
+  "email": "admin@test.com",
+  "password": "123456",
+  "rol": "ADMIN"
+}
+
+### Registrar entrenador
+POST http://localhost:8080/auth/register
+Content-Type: application/json
+
+{
+  "nombre": "Entrenador",
+  "email": "trainer@test.com",
+  "password": "123456",
+  "rol": "TRAINER"
+}
+
+### Registrar socio
+POST http://localhost:8080/auth/register
+Content-Type: application/json
+
+{
+  "nombre": "Juan",
+  "email": "juan@test.com",
+  "password": "123456",
+  "rol": "MEMBER"
+}
+
+### Login admin
+POST http://localhost:8080/auth/login
+Content-Type: application/json
+
+{
+  "email": "admin@test.com",
+  "password": "123456"
+}
+
+### Crear sala
+POST http://localhost:8080/api/salas
+Authorization: Bearer PEGA_AQUI_TOKEN_ADMIN
+Content-Type: application/json
+
+{
+  "nombre": "Sala Spinning",
+  "capacidadMaxima": 25,
+  "ubicacion": "Primera planta"
+}
+
+### Crear clase cardio
+POST http://localhost:8080/api/clases/cardio
+Authorization: Bearer PEGA_AQUI_TOKEN_ADMIN
+Content-Type: application/json
+
+{
+  "nombre": "Spinning",
+  "descripcion": "Clase intensa de bicicleta",
+  "fechaInicio": "2026-08-20T10:00:00",
+  "fechaFin": "2026-08-20T11:00:00",
+  "capacidad": 20,
+  "nivelIntensidad": "ALTO",
+  "salaId": 1,
+  "entrenadorId": 2,
+  "caloriasEstimadas": 500,
+  "tipoCardio": "Bicicleta"
+}
+
+### Ver clases
+GET http://localhost:8080/api/clases
+
+### Reservar clase
+POST http://localhost:8080/api/reservas/clases/1
+Authorization: Bearer PEGA_AQUI_TOKEN_MEMBER
+
+### Mis reservas
+GET http://localhost:8080/api/reservas/mis-reservas
+Authorization: Bearer PEGA_AQUI_TOKEN_MEMBER
+
+### Cancelar reserva
+PATCH http://localhost:8080/api/reservas/1/cancelar
+Authorization: Bearer PEGA_AQUI_TOKEN_MEMBER
