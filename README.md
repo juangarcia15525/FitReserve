@@ -255,6 +255,8 @@ En una entrega real tambien se puede copiar esta planificacion a Trello, GitHub 
 - Diagrama UML: `docs/diagrama-uml-nuevo.md`
 - Casos de uso: `docs/diagrama-casos-uso.md`
 - Ejemplos HTTP/Postman: `docs/postman-examples.http`
+- Presentacion final: `docs/presentacion-fitreserve.md`
+- Script para crear Google Slides: `docs/crear-presentacion-google-slides.gs`
 
 ## Trabajo futuro
 
@@ -280,4 +282,5 @@ Proyecto academico creado para entrega final. Uso educativo.
 ## Miembros del equipo
 
 - Juan Garcia
+
 
